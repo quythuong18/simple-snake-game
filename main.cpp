@@ -76,7 +76,10 @@ int main() {
     screen.drawFood(mainBox, food);
 
     if(snake.isEatingFood(food)) {
-      food.generate(mainBox);
+      do {
+        food.generate(mainBox);
+      }
+      while(food.isGeneratedInsideSnake(snake));
       snake.grow();
     }
 

@@ -56,6 +56,7 @@ class Grid {
     SDL_Color getBackgroundColor();
 };
 
+class Snake;
 class Food {
   GridPoint Position;
   public:
@@ -63,6 +64,7 @@ class Food {
   Food(GridPoint p);
   void generate(Grid box);
   GridPoint getPosition();
+  bool isGeneratedInsideSnake(Snake &snake);
 };
 
 class Snake {

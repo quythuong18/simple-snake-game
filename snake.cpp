@@ -178,3 +178,10 @@ void Snake::grow() {
   }
   std::cout << "grow\n";
 }
+
+bool Food::isGeneratedInsideSnake(Snake &snake) {
+  for(int i = 0; i < snake.getBody().size(); i++) {
+    if(Position == snake.getBody()[i]) return true;
+  }
+  return false;
+}
