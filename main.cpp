@@ -8,7 +8,6 @@ Food food(GridPoint(3, 2));
 int main() {
   Grid mainBox(40, 40, 40, 22, CELL_SIZE, GRID_BACKGROUND_COLOR);
   food.generate(mainBox);
-
   const int frameDelay = 1000 / 13; // FPS, speed of snake
   uint32_t frameStart;
   int frameTime;

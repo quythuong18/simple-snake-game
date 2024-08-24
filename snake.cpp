@@ -111,8 +111,8 @@ Food::Food(GridPoint p) {
   Position = p;
 }
 void Food::generate(Grid box) {
-  Position.setX(1 + rand() % (box.getWidth() + 1));
-  Position.setY(1 + rand() % (box.getHeight() + 1));
+  Position.setX(rand() % (box.getWidth()));
+  Position.setY(rand() % (box.getHeight()));
   std::cout << "(" << Position.getX() << ", " << Position.getY() << ")\n";
 }
 GridPoint Food::getPosition() { return Position; }
