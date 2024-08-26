@@ -1,7 +1,7 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#include <SDL2/SDL.h>
+#include "core.h"
 #include "colors.h"
 #include <cstdint>
 #include <iostream>
@@ -26,37 +26,25 @@ enum SnakeState {
   DEAD
 };
 
-class GridPoint {
-  uint16_t x, y;
-  public: 
-  GridPoint();
-  GridPoint(uint16_t x, uint16_t y);
-  uint16_t getX();
-  uint16_t getY();
-  void setX(uint16_t x);
-  void setY(uint16_t y);
-  GridPoint& operator=(const GridPoint& p);
-  bool operator==(const GridPoint& p) ;
-};
-class Grid {
-  private:
-    uint16_t x, y; // position in the root renderer
-    uint16_t width; /*in cell unit*/
-    uint16_t height; /*in cell unit*/
-    uint16_t cellSize; /*in pixel*/
-    SDL_Color backgroundColor;
-    SDL_Color borderColor;
-  public:
-    Grid(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t cellSize, SDL_Color backgroundColor);
-    uint16_t getWidth();
-    uint16_t getHeight();
-    uint16_t getX();
-    uint16_t getY();
-    uint16_t getCellSize();
-    SDL_Color getBackgroundColor();
-};
 
 class Snake;
+class Food;
+class Draw;
+
+class Draw {
+    Screen* screen = new Screen(WINDOW_WIDTH, WINDOW_HEIGHT);
+  public:
+    Draw();
+    void drawSnake(Grid box, Snake snake);
+    void clearSnake(Grid box, Snake snake);
+
+    void drawFood(Grid box, Food food);
+    void clearFood(Grid box, Food food);
+
+    Screen* getScreen();
+
+};
+
 class Food {
   GridPoint Position;
   public:
@@ -83,29 +71,6 @@ class Snake {
     void moveDown();
     bool isEatingFood(Food food);
     void grow();
-};
-
-class Screen {
-  private:
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
-    bool success = true;
-  public:
-    Screen();
-    void updateWindow();
-
-    void drawBox(Grid box);
-    void drawAGridCell(SDL_Color color, Grid box, GridPoint gridPoint);
-
-    void drawSnake(Grid box, Snake snake);
-    void clearSnake(Grid box, Snake snake);
-
-    void drawFood(Grid box, Food food);
-    void clearFood(Grid box, Food food);
-
-    void setRendererColor(SDL_Color color);
-    void clear();
-    ~Screen();
 };
 
 #endif 

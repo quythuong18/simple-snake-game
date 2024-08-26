@@ -1,7 +1,7 @@
 #include "snake.h"
 #include <unistd.h>
 
-Screen screen;
+Draw draw;
 Snake snake(4, GridPoint(10, 10));
 Food food(GridPoint(3, 2));
 
@@ -67,13 +67,13 @@ int main() {
       }
     }
 
-    screen.clearFood(mainBox, food);
-    screen.clearSnake(mainBox, snake);
+    draw.clearFood(mainBox, food);
+    draw.clearSnake(mainBox, snake);
 
-    screen.drawBox(mainBox);
+    draw.getScreen()->drawBox(mainBox);
 
-    screen.drawSnake(mainBox, snake);
-    screen.drawFood(mainBox, food);
+    draw.drawSnake(mainBox, snake);
+    draw.drawFood(mainBox, food);
 
     if(snake.isEatingFood(food)) {
       do {
@@ -83,7 +83,7 @@ int main() {
       snake.grow();
     }
 
-    screen.updateWindow();
+    draw.getScreen()->updateWindow();
 
     frameTime = SDL_GetTicks() - frameStart;
     if(frameTime < frameDelay) {

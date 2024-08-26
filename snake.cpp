@@ -1,72 +1,30 @@
 #include "snake.h"
 #include <cstdlib>
 
-Screen::Screen() {
-  if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-    success = false;
-  } else {
-    window = SDL_CreateWindow("Snake game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-    if(window == nullptr) {
-      printf("Window could not initialize! SDL_Error: SDL_Error: %s\n", SDL_GetError());
-      success = false;
-    } else {
-      renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-      if(renderer == nullptr) {
-        printf("Renderer could not be created! SDL_Error(): %s\n", SDL_GetError());
-        success = false;
-      }
-    }
-  }
-}
-Screen::~Screen() {
-  SDL_DestroyWindow(window);
-  SDL_Quit();
-}
-void Screen::setRendererColor(SDL_Color color) {
-  SDL_SetRenderDrawColor(this->renderer, color.r, color.g, color.b, color.a);
-}
-void Screen::updateWindow() {
-  if(success == false) {
-    printf("Fail to initialize screen!");
-    return;
-  }
 
-  SDL_RenderPresent(renderer);
-}
-void Screen::drawBox(Grid box) {
-  
-  // draw the outline
-  this->setRendererColor(GRID_BORDER_COLOR);
-  SDL_Rect outlineRect = {-1 + box.getX(), -1 + box.getY(), 
-    box.getWidth() * CELL_SIZE + 2, box.getHeight() * CELL_SIZE + 2};
-  SDL_RenderDrawRect(renderer, &outlineRect);
+Draw::Draw() {
 
-  // fill the box
-  this->setRendererColor(box.getBackgroundColor());
-  SDL_Rect fillRect = {box.getX(), box.getY(),
-    box.getWidth() * CELL_SIZE, box.getHeight() * CELL_SIZE};
-  SDL_RenderFillRect(renderer, &fillRect);
 }
-void Screen::drawSnake(Grid box, Snake snake) {
+void Draw::drawSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
   for(int i = 0; i < snakeLength - 1; i++) {
-    drawAGridCell(SNAKE_COLOR, box, snake.getBody()[i]);
+    screen->drawAGridCell(SNAKE_COLOR, box, snake.getBody()[i]);
   }
-  drawAGridCell(RED, box, snake.getBody()[snakeLength - 1]);
+  screen->drawAGridCell(RED, box, snake.getBody()[snakeLength - 1]);
 }
-void Screen::clearSnake(Grid box, Snake snake) {
+void Draw::clearSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
   for(int i = 0; i < snakeLength; i++) {
-    drawAGridCell(box.getBackgroundColor(), box, snake.getBody()[i]);
+    screen->drawAGridCell(box.getBackgroundColor(), box, snake.getBody()[i]);
   }
 }
-void Screen::drawFood(Grid box, Food food) {
-  drawAGridCell(GREEN, box, food.getPosition());
+void Draw::drawFood(Grid box, Food food) {
+  screen->drawAGridCell(GREEN, box, food.getPosition());
 }
-void Screen::clearFood(Grid box, Food food) {
-  drawAGridCell(box.getBackgroundColor(), box, food.getPosition());
+void Draw::clearFood(Grid box, Food food) {
+  screen->drawAGridCell(box.getBackgroundColor(), box, food.getPosition());
 }
+Screen* Draw::getScreen() { return screen; }
 
 GridPoint::GridPoint(uint16_t x, uint16_t y) { this->x = x; this->y = y;}
 GridPoint::GridPoint() {}
@@ -180,7 +138,8 @@ void Snake::grow() {
 }
 
 bool Food::isGeneratedInsideSnake(Snake &snake) {
-  for(int i = 0; i < snake.getBody().size(); i++) {
+  uint16_t snakeLength = snake.getBody().size();
+  for(int i = 0; i < snakeLength; i++) {
     if(Position == snake.getBody()[i]) return true;
   }
   return false;
