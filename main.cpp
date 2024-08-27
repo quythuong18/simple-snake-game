@@ -2,21 +2,24 @@
 #include <unistd.h>
 
 Draw draw;
-Snake snake(4, GridPoint(10, 10));
+Snake snake(2, GridPoint(10, 10));
 Food food(GridPoint(3, 2));
 
-int main() {
-  Grid mainBox(40, 40, 40, 22, CELL_SIZE, GRID_BACKGROUND_COLOR);
-  food.generate(mainBox);
-  const int frameDelay = 1000 / 13; // FPS, speed of snake
-  uint32_t frameStart;
-  int frameTime;
+Grid mainBox(40, 40, 40, 22, CELL_SIZE, GRID_BACKGROUND_COLOR);
+const int frameDelay = 1000 / 13; // FPS, speed of snake
+uint32_t frameStart;
+int frameTime;
 
+
+void gameLoop() {
   // The main game loop
   SDL_Event e;
   bool quit = false;
   bool gameOver = false;
   bool isRightKeyPress;
+
+  uint16_t scores = 0;
+
   while(quit == false && gameOver == false) {
     frameStart = SDL_GetTicks();
     
@@ -76,6 +79,8 @@ int main() {
     draw.drawFood(mainBox, food);
 
     if(snake.isEatingFood(food)) {
+      scores++;
+      std::cout << scores << "\n";
       do {
         food.generate(mainBox);
       }
@@ -90,5 +95,11 @@ int main() {
       SDL_Delay(frameDelay - frameTime);
     }
   }
+}
+
+int main() {
+  // do {
+  gameLoop();  
+  // } while(true);
   return 0;
 }

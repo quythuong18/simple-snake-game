@@ -1,5 +1,8 @@
 FLAGS = -lSDL2 -Wall
 
+
+all: core.o snake.o main.o snake
+
 snake: ./build/snake.o ./build/main.o ./build/core.o
 	g++ $(FLAGS) $? -o ./build/snake
 
@@ -14,7 +17,7 @@ core.o: core.cpp
 # testing
 grid.o: ./test/grid.cpp
 	g++ $(FLAGS) -c $< -o ./build/grid.o
-grid: ./build/snake.o ./build/grid.o
+grid: ./build/core.o ./build/grid.o
 	g++ $(FLAGS) $? -o ./build/grid
 
 clean:

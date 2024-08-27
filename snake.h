@@ -4,7 +4,6 @@
 #include "core.h"
 #include "colors.h"
 #include <cstdint>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -26,13 +25,12 @@ enum SnakeState {
   DEAD
 };
 
-
 class Snake;
 class Food;
 class Draw;
 
 class Draw {
-    Screen* screen = new Screen(WINDOW_WIDTH, WINDOW_HEIGHT);
+    Screen* screen = nullptr;
   public:
     Draw();
     void drawSnake(Grid box, Snake snake);
@@ -46,7 +44,7 @@ class Draw {
 };
 
 class Food {
-  GridPoint Position;
+  GridPoint position;
   public:
   Food();
   Food(GridPoint p);
@@ -72,5 +70,6 @@ class Snake {
     bool isEatingFood(Food food);
     void grow();
 };
+
 
 #endif 

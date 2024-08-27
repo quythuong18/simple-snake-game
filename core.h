@@ -3,9 +3,13 @@
 
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
+#include <SDL2/SDL_ttf.h>
+#include <iostream>
+
 class Screen;
 class Grid;
 class GridPoint;
+class TextRenderer;
 
 class Screen {
   private:
@@ -22,6 +26,7 @@ class Screen {
 
     void setRendererColor(SDL_Color color);
     void clear();
+
     ~Screen();
 };
 
@@ -53,5 +58,19 @@ class Grid {
     uint16_t getY();
     uint16_t getCellSize();
     SDL_Color getBackgroundColor();
+};
+
+class TextRenderer {
+    TTF_Font* font = TTF_OpenFont("./retro_gaming.ttf", 24);
+    SDL_Color fontColor = {0xFF, 0xFF, 0xFF};
+    std::string message;
+    SDL_Surface* surfaceMessage;
+    SDL_Texture* texttureMessage;
+    SDL_Rect* rect;
+  public:
+    TextRenderer(Screen& screen);
+    ~TextRenderer();
+    void setFont(std::string fontFile, uint8_t fontSize);
+    void setMessage(std::string Msg);
 };
 #endif 

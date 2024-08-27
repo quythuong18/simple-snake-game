@@ -1,9 +1,9 @@
 #include "snake.h"
+#include <SDL2/SDL_ttf.h>
 #include <cstdlib>
 
-
 Draw::Draw() {
-
+  screen = new Screen(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 void Draw::drawSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
@@ -26,54 +26,22 @@ void Draw::clearFood(Grid box, Food food) {
 }
 Screen* Draw::getScreen() { return screen; }
 
-GridPoint::GridPoint(uint16_t x, uint16_t y) { this->x = x; this->y = y;}
-GridPoint::GridPoint() {}
-uint16_t GridPoint::getX() { return this->x; }
-uint16_t GridPoint::getY() { return this->y; }
-void GridPoint::setX(uint16_t x) { this->x = x; }
-void GridPoint::setY(uint16_t y) { this->y = y; }
-GridPoint& GridPoint::operator=(const GridPoint& p) {
-  x = p.x;
-  y = p.y;
-  return *this;
-}
-bool GridPoint::operator==(const GridPoint& p) {
-  return this->x == p.x && this->y == p.y;
-}
-
-Grid::Grid(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t cellSize, SDL_Color backgroundColor) {
-      this->x = x;
-      this->y = y;
-      this->width = width;
-      this->height = height;
-      this->cellSize = cellSize;
-      this->backgroundColor = backgroundColor;
-}
-
-uint16_t Grid::getWidth() { return width;}
-uint16_t Grid::getHeight() { return height;}
-uint16_t Grid::getX() { return x;}
-uint16_t Grid::getY() { return y;}
-uint16_t Grid::getCellSize() { return cellSize;}
-SDL_Color Grid::getBackgroundColor() { return backgroundColor;}
-
-void Screen::drawAGridCell(SDL_Color color, Grid box, GridPoint gridPoint) {
-  if(box.getWidth() <= gridPoint.getX() || box.getHeight() <= gridPoint.getY()) return; // ??
-  SDL_Rect squarePoint = {box.getX() + gridPoint.getX() * box.getCellSize(), box.getY() + gridPoint.getY() * box.getCellSize(),
-    box.getCellSize(), box.getCellSize()};
-  this->setRendererColor(color);
-  SDL_RenderFillRect(renderer, &squarePoint);
-}
-
 Food::Food(GridPoint p) {
-  Position = p;
+  position = p;
 }
 void Food::generate(Grid box) {
-  Position.setX(rand() % (box.getWidth()));
-  Position.setY(rand() % (box.getHeight()));
-  std::cout << "(" << Position.getX() << ", " << Position.getY() << ")\n";
+  position.setX(rand() % (box.getWidth()));
+  position.setY(rand() % (box.getHeight()));
+  //std::cout << "(" << Position.getX() << ", " << Position.getY() << ")\n";
 }
-GridPoint Food::getPosition() { return Position; }
+bool Food::isGeneratedInsideSnake(Snake &snake) {
+  uint16_t snakeLength = snake.getBody().size();
+  for(int i = 0; i < snakeLength; i++) {
+    if(position == snake.getBody()[i]) return true;
+  }
+  return false;
+}
+GridPoint Food::getPosition() { return position; }
 
 Snake::Snake(uint16_t length, GridPoint startPos) {
   while(length--) {
@@ -94,28 +62,28 @@ void Snake::moveDown() {
   this->moveBodyAlong();
   this->body.back().setY(this->body.back().getY() + 1);
   this->state = GOING_DOWN;
-  std::cout << "move down\n";
+  // std::cout << "move down\n";
 }
 void Snake::moveUp() {
   if(state == GOING_DOWN) return;
   this->moveBodyAlong();
   this->body.back().setY(this->body.back().getY() - 1);
   this->state = GOING_UP;
-  std::cout << "move up\n";
+  // std::cout << "move up\n";
 }
 void Snake::moveLeft() {
   if(state == GOING_RIGHT) return;
   this->moveBodyAlong();
   this->body.back().setX(this->body.back().getX() - 1);
   this->state = GOING_LEFT;
-  std::cout << "move left\n";
+  // std::cout << "move left\n";
 }
 void Snake::moveRight() {
   if(state == GOING_LEFT) return;
   this->moveBodyAlong();
   this->body.back().setX(this->body.back().getX() + 1);
   this->state = GOING_RIGHT;
-  std::cout << "move right\n";
+  // std::cout << "move right\n";
 }
 bool Snake::isEatingFood(Food food) {
   return this->body.back() == food.getPosition();
@@ -134,13 +102,6 @@ void Snake::grow() {
       body.insert(body.begin(), GridPoint(body[0].getX() + 1, body[0].getY()));
     }
   }
-  std::cout << "grow\n";
 }
 
-bool Food::isGeneratedInsideSnake(Snake &snake) {
-  uint16_t snakeLength = snake.getBody().size();
-  for(int i = 0; i < snakeLength; i++) {
-    if(Position == snake.getBody()[i]) return true;
-  }
-  return false;
-}
+

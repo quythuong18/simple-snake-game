@@ -1,10 +1,12 @@
-#include "../snake.h"
+#include "../core.h"
+#include "../colors.h"
 
 const short int BOX_WIDTH = 36;
 const short int BOX_HEIGHT = 16;
+const short int CELL_SIZE = 24;
 
-Screen screen;
-Grid box(40, 40, BOX_WIDTH, BOX_HEIGHT, CELL_SIZE, GRID_BACKGROUND_COLOR);
+Screen screen(1200, 640);
+Grid box(40, 40, BOX_WIDTH, BOX_HEIGHT, CELL_SIZE, BACKGROUND);
 
 int main() {
   screen.drawBox(box);
