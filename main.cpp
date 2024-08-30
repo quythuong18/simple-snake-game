@@ -1,28 +1,30 @@
 #include "snake.h"
 #include <unistd.h>
 
-Draw draw;
-Snake snake(2, GridPoint(10, 10));
+const uint8_t BOX_WIDTH = 40;
+const uint8_t BOX_HEIGHT = 22;
+
+Draw draw(new Screen(BOX_WIDTH * CELL_SIZE, BOX_HEIGHT * CELL_SIZE));
+Grid mainBox(0, 0, BOX_WIDTH, BOX_HEIGHT, CELL_SIZE, GRID_BACKGROUND_COLOR);
+
+Snake snake(3, GridPoint(10, 10));
 Food food(GridPoint(3, 2));
 
-Grid mainBox(40, 40, 40, 22, CELL_SIZE, GRID_BACKGROUND_COLOR);
 const int frameDelay = 1000 / 13; // FPS, speed of snake
 uint32_t frameStart;
 int frameTime;
-
 
 void gameLoop() {
   // The main game loop
   SDL_Event e;
   bool quit = false;
-  bool gameOver = false;
   bool isRightKeyPress;
 
   uint16_t scores = 0;
 
-  while(quit == false && gameOver == false) {
+  while(quit == false) {
+
     frameStart = SDL_GetTicks();
-    
     isRightKeyPress = false;
     while(SDL_PollEvent(&e)){ 
       if(e.type == SDL_QUIT) quit = true; 
@@ -70,6 +72,9 @@ void gameLoop() {
       }
     }
 
+    if(snake.isDead(mainBox))
+      break;
+
     draw.clearFood(mainBox, food);
     draw.clearSnake(mainBox, snake);
 
@@ -98,8 +103,10 @@ void gameLoop() {
 }
 
 int main() {
+  //snake.logSnake();
   // do {
   gameLoop();  
   // } while(true);
+  SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
   return 0;
 }

@@ -53,13 +53,14 @@ void Screen::drawAGridCell(SDL_Color color, Grid box, GridPoint gridPoint) {
   this->setRendererColor(color);
   SDL_RenderFillRect(renderer, &squarePoint);
 }
+SDL_Renderer* Screen::getRederer() { return renderer; }
 
-GridPoint::GridPoint(uint16_t x, uint16_t y) { this->x = x; this->y = y;}
+GridPoint::GridPoint(int16_t x, int16_t y) { this->x = x; this->y = y;}
 GridPoint::GridPoint() {}
-uint16_t GridPoint::getX() { return this->x; }
-uint16_t GridPoint::getY() { return this->y; }
-void GridPoint::setX(uint16_t x) { this->x = x; }
-void GridPoint::setY(uint16_t y) { this->y = y; }
+int16_t GridPoint::getX() { return this->x; }
+int16_t GridPoint::getY() { return this->y; }
+void GridPoint::setX(int16_t x) { this->x = x; }
+void GridPoint::setY(int16_t y) { this->y = y; }
 GridPoint& GridPoint::operator=(const GridPoint& p) {
   x = p.x;
   y = p.y;
@@ -84,3 +85,21 @@ uint16_t Grid::getX() { return x;}
 uint16_t Grid::getY() { return y;}
 uint16_t Grid::getCellSize() { return cellSize;}
 SDL_Color Grid::getBackgroundColor() { return backgroundColor;}
+
+// TextRenderer::TextRenderer(Screen* screen) {
+//   this->screen = screen;
+//   font = TTF_OpenFont("./retro_gaming.ttf", 24);
+//   fontColor  = {0xFF, 0xFF, 0xFF};
+//   surfaceMessage = TTF_RenderText_Solid(font, message.c_str(), fontColor);
+//   textureMessage = SDL_CreateTextureFromSurface(screen->getRederer(), surfaceMessage);
+//   rect = {0, 0, 100, 100};
+// }
+// void TextRenderer::setMessage(std::string message) { this->message = message; }
+// void TextRenderer::setTextBox(SDL_Rect rect) { this->rect = rect; }
+// void TextRenderer::show() {
+//   SDL_RenderCopy(screen->getRederer(), textureMessage, NULL, &rect);
+// }
+// TextRenderer::~TextRenderer() {
+//   SDL_FreeSurface(surfaceMessage);
+//   SDL_DestroyTexture(textureMessage);
+// }

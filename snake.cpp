@@ -2,15 +2,15 @@
 #include <SDL2/SDL_ttf.h>
 #include <cstdlib>
 
-Draw::Draw() {
-  screen = new Screen(WINDOW_WIDTH, WINDOW_HEIGHT);
+Draw::Draw(Screen *screen) {
+  this->screen = screen;
 }
 void Draw::drawSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
   for(int i = 0; i < snakeLength - 1; i++) {
     screen->drawAGridCell(SNAKE_COLOR, box, snake.getBody()[i]);
   }
-  screen->drawAGridCell(RED, box, snake.getBody()[snakeLength - 1]);
+  screen->drawAGridCell(RED, box, snake.getBody().back());
 }
 void Draw::clearSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
@@ -45,7 +45,7 @@ GridPoint Food::getPosition() { return position; }
 
 Snake::Snake(uint16_t length, GridPoint startPos) {
   while(length--) {
-    body.push_back((GridPoint){uint16_t(startPos.getX() - length), startPos.getY()});
+    body.push_back((GridPoint){int16_t(startPos.getX() - length), startPos.getY()});
   }
 }
 std::vector<GridPoint> Snake::getBody() { return body; }
@@ -103,5 +103,30 @@ void Snake::grow() {
     }
   }
 }
+bool Snake::isDead(Grid box) {
+  // check snake eating its tail
+  uint16_t snakeLength = body.size();
+  for(int i = 1; i < snakeLength - 3; i++) {
+    if(body.back() == body[i]) {
+      std::cout << "snake ate its tail\n";
+      return true;
+    } 
+  }
 
+  // check snake heading the wall of the box
+  if(body.back().getX() < 0 || body.back().getX() == box.getWidth() 
+      || body.back().getY() < 0 || body.back().getY() == box.getHeight())  {
+    std::cout << "snake headed toward the wall\n";
+    return true;
+  }
+
+
+  return false;
+}
+void Snake::logSnake() {
+  uint16_t snakeLength = body.size();
+  for(int i = 0; i < snakeLength; i++) {
+    std::cout << "(" << body[i].getX() << ", " << body[i].getY() << ")\n" << "---\n";
+  }
+}
 

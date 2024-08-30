@@ -32,7 +32,7 @@ class Draw;
 class Draw {
     Screen* screen = nullptr;
   public:
-    Draw();
+    Draw(Screen *screen);
     void drawSnake(Grid box, Snake snake);
     void clearSnake(Grid box, Snake snake);
 
@@ -40,7 +40,6 @@ class Draw {
     void clearFood(Grid box, Food food);
 
     Screen* getScreen();
-
 };
 
 class Food {
@@ -69,6 +68,10 @@ class Snake {
     void moveDown();
     bool isEatingFood(Food food);
     void grow();
+
+    bool isDead(Grid box);
+
+    void logSnake();
 };
 
 

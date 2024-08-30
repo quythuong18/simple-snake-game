@@ -27,18 +27,19 @@ class Screen {
     void setRendererColor(SDL_Color color);
     void clear();
 
+    SDL_Renderer* getRederer();
     ~Screen();
 };
 
 class GridPoint {
-  uint16_t x, y;
+  int16_t x, y;
   public: 
   GridPoint();
-  GridPoint(uint16_t x, uint16_t y);
-  uint16_t getX();
-  uint16_t getY();
-  void setX(uint16_t x);
-  void setY(uint16_t y);
+  GridPoint(int16_t x, int16_t y);
+  int16_t getX();
+  int16_t getY();
+  void setX(int16_t x);
+  void setY(int16_t y);
   GridPoint& operator=(const GridPoint& p);
   bool operator==(const GridPoint& p) ;
 };
@@ -60,17 +61,21 @@ class Grid {
     SDL_Color getBackgroundColor();
 };
 
-class TextRenderer {
-    TTF_Font* font = TTF_OpenFont("./retro_gaming.ttf", 24);
-    SDL_Color fontColor = {0xFF, 0xFF, 0xFF};
-    std::string message;
-    SDL_Surface* surfaceMessage;
-    SDL_Texture* texttureMessage;
-    SDL_Rect* rect;
-  public:
-    TextRenderer(Screen& screen);
-    ~TextRenderer();
-    void setFont(std::string fontFile, uint8_t fontSize);
-    void setMessage(std::string Msg);
-};
+// class TextRenderer {
+//     Screen* screen;
+//     TTF_Font* font;
+//     SDL_Color fontColor;
+//     std::string message;
+//     SDL_Surface* surfaceMessage;
+//     SDL_Texture* textureMessage;
+//     SDL_Rect rect;
+//   public:
+//     TextRenderer(Screen* screen);
+//     ~TextRenderer();
+//
+//     void show();
+//     void setFont(std::string fontFile, uint8_t fontSize);
+//     void setMessage(std::string message);
+//     void setTextBox(SDL_Rect rect);
+// };
 #endif 
