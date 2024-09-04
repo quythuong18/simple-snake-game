@@ -11,7 +11,6 @@ const uint16_t WINDOW_WIDTH = 1200;
 const uint16_t WINDOW_HEIGHT = 640;
 
 const SDL_Color GRID_BACKGROUND_COLOR = BACKGROUND;
-const SDL_Color GRID_BORDER_COLOR = FOREGROUND;
 
 const SDL_Color SNAKE_COLOR = FOREGROUND;
 
@@ -44,21 +43,27 @@ class Draw {
 
 class Food {
   GridPoint position;
+  SDL_Color color;
   public:
   Food();
-  Food(GridPoint p);
+  Food(GridPoint p, SDL_Color color);
   void generate(Grid box);
   GridPoint getPosition();
   bool isGeneratedInsideSnake(Snake &snake);
+  SDL_Color getColor();
+  void getColor(SDL_Color color);
 };
 
 class Snake {
   private:
     std::vector<GridPoint> body; // the last point is head
     SnakeState state = GOING_RIGHT;
+    SDL_Color bodyColor;
+    SDL_Color headColor;
+    
   public:
     Snake();
-    Snake(uint16_t length, GridPoint startPos);
+    Snake(uint16_t length, GridPoint startPos, SDL_Color bodyColor, SDL_Color headColor);
     std::vector<GridPoint> getBody();
     SnakeState getState();
     void moveBodyAlong(); // move the body of the snake along the head(the last element in vector)
@@ -72,6 +77,9 @@ class Snake {
     bool isDead(Grid box);
 
     void logSnake();
+
+    SDL_Color getBodyColor();
+    SDL_Color getHeadColor();
 };
 
 

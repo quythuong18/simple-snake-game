@@ -7,7 +7,6 @@ const short int CELL_SIZE = 24;
 
 Screen* screen = new Screen(1200, 640);
 Grid box(40, 40, BOX_WIDTH, BOX_HEIGHT, CELL_SIZE, BACKGROUND);
-TextRenderer textRenderer(screen);
 
 int main() {
   screen->drawBox(box);
@@ -21,8 +20,6 @@ int main() {
       screen->drawAGridCell(cellFillColor, box, GridPoint(i, j));
     }
   }
-  textRenderer.setMessage("Hello world");
-  textRenderer.show();
   // screen.drawAGridCell(RED, box, GridPoint(BOX_WIDTH - 1, BOX_HEIGHT - 1));
   // screen.drawAGridCell(RED, box, GridPoint(BOX_WIDTH - 1, 0));
   // screen.drawAGridCell(RED, box, GridPoint(0, 0));

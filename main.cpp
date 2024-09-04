@@ -4,11 +4,12 @@
 const uint8_t BOX_WIDTH = 40;
 const uint8_t BOX_HEIGHT = 22;
 
-Draw draw(new Screen(BOX_WIDTH * CELL_SIZE, BOX_HEIGHT * CELL_SIZE));
+Draw draw(new Screen(BOX_WIDTH * CELL_SIZE, BOX_HEIGHT * CELL_SIZE + 100));
+Screen* screen = draw.getScreen();
 Grid mainBox(0, 0, BOX_WIDTH, BOX_HEIGHT, CELL_SIZE, GRID_BACKGROUND_COLOR);
 
-Snake snake(3, GridPoint(10, 10));
-Food food(GridPoint(3, 2));
+Snake snake(3, GridPoint(10, 10), FOREGROUND, RED);
+Food food(GridPoint(3, 10), GREEN);
 
 const int frameDelay = 1000 / 13; // FPS, speed of snake
 uint32_t frameStart;
@@ -26,6 +27,7 @@ void gameLoop() {
 
     frameStart = SDL_GetTicks();
     isRightKeyPress = false;
+
     while(SDL_PollEvent(&e)){ 
       if(e.type == SDL_QUIT) quit = true; 
       else if(e.type == SDL_KEYDOWN) {
@@ -51,6 +53,7 @@ void gameLoop() {
             isRightKeyPress = true;
             break;
         }
+        break;
       }
     }
     if(!isRightKeyPress) {
@@ -75,13 +78,15 @@ void gameLoop() {
     if(snake.isDead(mainBox))
       break;
 
+    //rendering
     draw.clearFood(mainBox, food);
     draw.clearSnake(mainBox, snake);
 
-    draw.getScreen()->drawBox(mainBox);
+    screen->drawBox(mainBox);
 
     draw.drawSnake(mainBox, snake);
     draw.drawFood(mainBox, food);
+
 
     if(snake.isEatingFood(food)) {
       scores++;
@@ -93,7 +98,7 @@ void gameLoop() {
       snake.grow();
     }
 
-    draw.getScreen()->updateWindow();
+    screen->updateWindow();
 
     frameTime = SDL_GetTicks() - frameStart;
     if(frameTime < frameDelay) {
@@ -107,6 +112,7 @@ int main() {
   // do {
   gameLoop();  
   // } while(true);
+
   SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
   return 0;
 }

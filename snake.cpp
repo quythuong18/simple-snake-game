@@ -8,9 +8,9 @@ Draw::Draw(Screen *screen) {
 void Draw::drawSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
   for(int i = 0; i < snakeLength - 1; i++) {
-    screen->drawAGridCell(SNAKE_COLOR, box, snake.getBody()[i]);
+    screen->drawAGridCell(snake.getBodyColor(), box, snake.getBody()[i]);
   }
-  screen->drawAGridCell(RED, box, snake.getBody().back());
+  screen->drawAGridCell(snake.getHeadColor(), box, snake.getBody().back());
 }
 void Draw::clearSnake(Grid box, Snake snake) {
   uint16_t snakeLength = snake.getBody().size();
@@ -19,15 +19,16 @@ void Draw::clearSnake(Grid box, Snake snake) {
   }
 }
 void Draw::drawFood(Grid box, Food food) {
-  screen->drawAGridCell(GREEN, box, food.getPosition());
+  screen->drawAGridCell(food.getColor(), box, food.getPosition());
 }
 void Draw::clearFood(Grid box, Food food) {
   screen->drawAGridCell(box.getBackgroundColor(), box, food.getPosition());
 }
 Screen* Draw::getScreen() { return screen; }
 
-Food::Food(GridPoint p) {
-  position = p;
+Food::Food(GridPoint position, SDL_Color color) {
+  this->position = position;
+  this->color = color;
 }
 void Food::generate(Grid box) {
   position.setX(rand() % (box.getWidth()));
@@ -42,8 +43,11 @@ bool Food::isGeneratedInsideSnake(Snake &snake) {
   return false;
 }
 GridPoint Food::getPosition() { return position; }
+SDL_Color Food::getColor() { return color; }
 
-Snake::Snake(uint16_t length, GridPoint startPos) {
+Snake::Snake(uint16_t length, GridPoint startPos, SDL_Color bodyColor, SDL_Color headColor) {
+  this->bodyColor = bodyColor;
+  this->headColor = headColor;
   while(length--) {
     body.push_back((GridPoint){int16_t(startPos.getX() - length), startPos.getY()});
   }
@@ -119,8 +123,6 @@ bool Snake::isDead(Grid box) {
     std::cout << "snake headed toward the wall\n";
     return true;
   }
-
-
   return false;
 }
 void Snake::logSnake() {
@@ -129,4 +131,5 @@ void Snake::logSnake() {
     std::cout << "(" << body[i].getX() << ", " << body[i].getY() << ")\n" << "---\n";
   }
 }
-
+SDL_Color Snake::getBodyColor() { return bodyColor;}
+SDL_Color Snake::getHeadColor() { return headColor;}
